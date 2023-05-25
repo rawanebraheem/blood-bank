@@ -45,7 +45,11 @@ Route::post('/setclientdata',  [MainController::class, 'setClientData']);
 Route::get('/getrequests',  [MainController::class, 'getRequests']);
 Route::post('/createrequest',  [MainController::class, 'createRequest']);      
 Route::get('/getnotificationsettings',  [MainController::class, 'getNotificationSettings']);
-Route::post('/setnotificationsettings',  [MainController::class, 'setNotificationSettings']);      
+Route::post('/setnotificationsettings',  [MainController::class, 'setNotificationSettings']);
+Route::post('/createnotificationrequest',  [MainController::class, 'createNotificationRequest']);
+Route::post('/getnotification',  [MainController::class, 'getNotification']);
+Route::get('/getnotifications',  [MainController::class, 'getNotifications']); 
+Route::post('/accountretrieve',  [MainController::class, 'accountRetrieve']);       
 
 
 

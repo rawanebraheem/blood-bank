@@ -15,6 +15,11 @@ use App\Models\Client;
 use App\Models\Request as requests;
 use App\Models\ClientGovernorate;
 use App\Models\BloodTypeClient;
+use App\Models\Notification;
+use App\Models\ClientNotification;
+
+
+
 
 
 
@@ -236,23 +241,23 @@ return  $response;
   
 
   //$client_governorates=Client::with('governorates')->where("id",5)->get();
-  $client = Client::find(1)->governorates();
-  dd($client);
-  //  $client_governorates=ClientGovernorate::select('governorate_id')->where("client_id",5)->get();/*Auth::user()->id*/
-  //  $client_bloodtype=BloodTypeClient::select('blood_type_id')->where("client_id",5)->get();/*Auth::user()->id*/
+ // $client = Client::find(1)->governorates(); مش شغالة بردو
+
+   $client_governorates=ClientGovernorate::select('governorate_id')->where("client_id",5)->get();/*Auth::user()->id*/
+   $client_bloodtype=BloodTypeClient::select('blood_type_id')->where("client_id",5)->get();/*Auth::user()->id*/
  
-  // $i=0;
-  //   foreach($client_governorates as $governorate){
-  //   $governorates[$i]=Governorate::where("id",$governorate->governorate_id)->first()->toArray();
-  //    $i++;
-  //  }
-  //  $i=0;
-  //   foreach($client_bloodtype as $bloodtype){
-  //   $bloodtypes[$i]=BloodType::where("id",$bloodtype->blood_type_id)->first()->toArray();
-  //    $i++;
-  //  }
-  //  $response=self::response(1,"kolo tamam",[$bloodtypes,$governorates]);
-  //  return  $response;  
+  $i=0;
+    foreach($client_governorates as $governorate){
+    $governorates[$i]=Governorate::where("id",$governorate->governorate_id)->first()->toArray();
+     $i++;
+   }
+   $i=0;
+    foreach($client_bloodtype as $bloodtype){
+    $bloodtypes[$i]=BloodType::where("id",$bloodtype->blood_type_id)->first()->toArray();
+     $i++;
+   }
+   $response=self::response(1,"kolo tamam",[$bloodtypes,$governorates]);
+   return  $response;  
   
    } 
 
@@ -300,4 +305,98 @@ return  $response;
    
    
 }
+
+
+public function createNotificationRequest(request $request){
+$don_request=requests::where('id',$request->request_id)->first();
+
+ $city=City::where('id',$don_request->city_id)->first();
+ $governorate=Governorate::where('id',$city->governorate_id)->first();
+$blood_type=BloodType::where('id',$don_request->blood_type_id)->first();
+
+
+$content='the donation request governorate:  '.$governorate->name."<br>".
+         'the donation request city:  ' .$city->name."<br>".
+         'the blood type:  '.$blood_type->name ;
+
+$notification=  Notification::create([
+  'title'=>'There is a new donation request',
+  'content'=>$content,
+  'request_id'=>$request->request_id
+ 
+ ]); 
+
+$clients=ClientGovernorate::select('client_id')->where('governorate_id', $governorate->id)->get();
+$i=0;
+foreach($clients as $client){
+$client_notification= ClientNotification::create([
+  'client_id'=>$client->client_id,
+  'notification_id'=>$notification->id, 
+  'is_read'=>FALSE
+ 
+ ]);
+ $all_client_notification[$i]=$client_notification;
+$i++;
+} 
+
+$response=self::response(1,"kolo tamam",[$notification,$clients,$all_client_notification]);
+return  $response;
+
+} 
+
+public function getNotification(request $request){
+$notification=Notification::where('id',$request->notification_id)->get();
+$notification_is_read=ClientNotification::where('client_id',5/*Auth::user()->id*/)->
+where('notification_id',$request->notification_id)->first();
+
+
+$notification_is_read->is_read=TRUE;
+$notification_is_read->save();
+
+$response=self::response(1,"kolo tamam",$notification);
+return  $response;
+
+}
+public function getNotifications(){
+
+
+
+
+
+
+}
+
+public function accountRetrieve(request $request){
+  $phone=$request->phone;
+  $client=Client::where('phone',$request->phone)->first();
+  $pin_code=null;
+ if (!(is_null($client))){
+ $pin_code= $client->pin_code;
+ for ($i = 0; $i<6; $i++) 
+        {
+            if($i==0){
+            $a = mt_rand(0,9);
+            }else{  $a .= mt_rand(0,9);}
+        }
+ $client->pin_code=$a;
+ $client->save();
+ 
+}
+
+$response=self::response(1,"kolo tamam",$pin_code);
+return  $response;
+
+}
+
+public function passwordReset(request $request){
+
+
+
+  
+
+
+}
+
+
+
 }

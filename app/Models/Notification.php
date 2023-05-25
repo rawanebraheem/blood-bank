@@ -9,7 +9,7 @@ class Notification extends Model
 
     protected $table = 'notifications';
     public $timestamps = true;
-    protected $fillable = array('title', 'content');
+    protected $fillable = array('title', 'content','request_id');
 
     public function request()
     {
