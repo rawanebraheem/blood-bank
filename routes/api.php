@@ -28,6 +28,8 @@ Route::prefix('v1')->group(function () {
     Route::get('/bloodtypes',  [MainController::class, 'bloodTypes']);
     Route::post('/register',  [AuthController::class, 'registration']);
     Route::post('/login',  [AuthController::class, 'login']);
+    Route::get('/settings',  [MainController::class, 'settings']);   
+ 
  
  
    
@@ -39,7 +41,6 @@ Route::get('/categories',  [MainController::class, 'categories']);
 Route::post('/articles',  [MainController::class, 'articles']);
 Route::post('/articlessearch',  [MainController::class, 'articlesSearch']);   
 Route::post('/article',  [MainController::class, 'article']);     
-Route::get('/settings',  [MainController::class, 'settings']);   
 Route::get('/getclientdata',  [MainController::class, 'getClientData']);      
 Route::post('/setclientdata',  [MainController::class, 'setClientData']);  
 Route::get('/getrequests',  [MainController::class, 'getRequests']);
@@ -49,7 +50,14 @@ Route::post('/setnotificationsettings',  [MainController::class, 'setNotificatio
 Route::post('/createnotificationrequest',  [MainController::class, 'createNotificationRequest']);
 Route::post('/getnotification',  [MainController::class, 'getNotification']);
 Route::get('/getnotifications',  [MainController::class, 'getNotifications']); 
-Route::post('/accountretrieve',  [MainController::class, 'accountRetrieve']);       
+Route::post('/accountretrievesendpincode',  [MainController::class, 'accountRetrieveSendPinCode']); 
+Route::post('/accountretrievecheckpincode',  [MainController::class, 'accountRetrieveCheckPinCode']);   
+
+Route::post('/passwordreset',  [MainController::class, 'passwordReset']); 
+Route::post('/contacts',  [MainController::class, 'contacts']);       
+
+
+
 
 
 

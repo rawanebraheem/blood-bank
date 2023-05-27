@@ -8,11 +8,11 @@ class CreateNotificationsTable extends Migration {
 	public function up()
 	{
 		Schema::create('notifications', function(Blueprint $table) {
-			$table->increments('id');
+			$table->bigIncrements('id');
 			$table->timestamps();
 			$table->string('title');
 			$table->string('content');
-			$table->bigInteger('request_id')->unsigned();
+			//$table->bigInteger('request_id')->unsigned();
 		});
 	}
 

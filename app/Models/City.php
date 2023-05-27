@@ -13,12 +13,12 @@ class City extends Model
 
     public function governorate()
     {
-        return $this->belongsTo('Governorate', 'governorate_id');
+        return $this->belongsTo(Governorate::class, 'governorate_id');
     }
 
     public function clients()
     {
-        return $this->hasMany('Client', 'city_id');
+        return $this->hasMany(Client::class, 'city_id');
     }
 
 }

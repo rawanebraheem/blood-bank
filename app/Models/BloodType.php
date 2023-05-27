@@ -14,17 +14,17 @@ class BloodType extends Model
 
     public function requests()
     {
-        return $this->hasMany('Request', 'blood_type_id');
+        return $this->hasMany(Request::class, 'blood_type_id');
     }
 
     public function clients()
     {
-        return $this->hasMany('Client', 'blood_type_id');
+        return $this->hasMany(Client::class, 'blood_type_id');
     }
 
-    public function clientss()
+    public function setting_clients()
     {
-        return $this->belongsToMany('Client');
+        return $this->belongsToMany(Client::class);
     }
 
 }

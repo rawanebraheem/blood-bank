@@ -8,10 +8,10 @@ class CreateArticleClientTable extends Migration {
 	public function up()
 	{
 		Schema::create('article_client', function(Blueprint $table) {
-			$table->increments('id');
+			$table->bigIncrements('id');
 			$table->timestamps();
-			$table->bigInteger('client_id')->unsigned();
-			$table->bigInteger('article_id')->unsigned();
+			//$table->bigInteger('client_id')->unsigned();
+			//$table->bigInteger('article_id')->unsigned();
 		});
 	}
 

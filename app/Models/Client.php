@@ -21,42 +21,42 @@ class Client extends Authenticatable
 
     public function bloodType()
     {
-        return $this->belongsTo('BloodType', 'blood_type_id');
+        return $this->belongsTo(BloodType::class, 'blood_type_id');
     }
 
     public function city()
     {
-        return $this->belongsTo('City', 'city_id');
+        return $this->belongsTo(City::class, 'city_id');
     }
 
     public function requests()
     {
-        return $this->hasMany('Request', 'client_id');
+        return $this->hasMany(Request::class, 'client_id');
     }
 
     public function governorates()
     {
-        return $this->belongsToMany('Governorate');
+        return $this->belongsToMany(Governorate::class);
     }
 
     public function bloodTypes()
     { 
-        return $this->belongsToMany('BloodType');
+        return $this->belongsToMany(BloodType::class);
     }
 
     public function notifications() 
     {
-        return $this->belongsToMany('Notification');
+        return $this->belongsToMany(Notification::class)->withPivot('is_read');
     }
 
     public function articles()
     { 
-        return $this->belongsToMany('Article');
+        return $this->belongsToMany(Article::class);
     }
 
     public function contacts()
     {
-        return $this->hasMany('Contact');
+        return $this->hasMany(Contact::class);
     }
 
     protected $hidden = [

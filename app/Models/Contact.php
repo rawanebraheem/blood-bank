@@ -7,11 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class Contact extends Model
 {
-    use HasFactory;
+    use HasFactory; 
+    protected $fillable = array('phone','title','msg','client_id');
+    
 
     public function client()
     {
-        return $this->belongsTo('Client');
+        return $this->belongsTo(Client::class); 
     }
 
 }

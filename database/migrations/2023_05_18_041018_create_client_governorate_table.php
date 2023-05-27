@@ -8,10 +8,10 @@ class CreateClientGovernorateTable extends Migration {
 	public function up()
 	{
 		Schema::create('client_governorate', function(Blueprint $table) {
-			$table->increments('id');
+			$table->bigIncrements('id');
 			$table->timestamps();
-			$table->bigInteger('client_id')->unsigned();
-			$table->bigInteger('governorate_id')->unsigned();
+			//$table->bigInteger('client_id')->unsigned();
+			//$table->bigInteger('governorate_id')->unsigned();
 		});
 	}
 

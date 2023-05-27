@@ -50,15 +50,9 @@ class AuthController extends Controller
             'd_o_b'=>$request->d_o_b,  
             
             
-        ]);  
-       
-        for ($i = 0; $i<6; $i++) 
-        {
-            if($i==0){
-            $a = mt_rand(0,9);
-            }else{  $a .= mt_rand(0,9);}
-        }
-        $client->pin_code=$a;
+        ]);   
+      
+        $client->pin_code=null;
         $token=$client->createToken('token')->plainTextToken;
         $client->save();
         

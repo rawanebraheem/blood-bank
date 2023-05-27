@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Auth; 
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\Http\Request;
 use App\Models\Governorate;
@@ -17,6 +18,9 @@ use App\Models\ClientGovernorate;
 use App\Models\BloodTypeClient;
 use App\Models\Notification;
 use App\Models\ClientNotification;
+use App\Models\Contact;
+
+
 
 
 
@@ -240,24 +244,14 @@ return  $response;
    public function getNotificationSettings(){
   
 
-  //$client_governorates=Client::with('governorates')->where("id",5)->get();
- // $client = Client::find(1)->governorates(); مش شغالة بردو
-
-   $client_governorates=ClientGovernorate::select('governorate_id')->where("client_id",5)->get();/*Auth::user()->id*/
-   $client_bloodtype=BloodTypeClient::select('blood_type_id')->where("client_id",5)->get();/*Auth::user()->id*/
- 
-  $i=0;
-    foreach($client_governorates as $governorate){
-    $governorates[$i]=Governorate::where("id",$governorate->governorate_id)->first()->toArray();
-     $i++;
-   }
-   $i=0;
-    foreach($client_bloodtype as $bloodtype){
-    $bloodtypes[$i]=BloodType::where("id",$bloodtype->blood_type_id)->first()->toArray();
-     $i++;
-   }
-   $response=self::response(1,"kolo tamam",[$bloodtypes,$governorates]);
+  $client_governorates=Client::with('governorates')->where("id",5/*Auth::user()->id*/)->get();
+  $client_bloodtype=Client::with('bloodtypes')->where("id",5/*Auth::user()->id*/)->get();
+  
+  
+  
+   $response=self::response(1,"kolo tamam",[$client_governorates,$client_bloodtype]);
    return  $response;  
+  
   
    } 
 
@@ -308,16 +302,13 @@ return  $response;
 
 
 public function createNotificationRequest(request $request){
-$don_request=requests::where('id',$request->request_id)->first();
-
- $city=City::where('id',$don_request->city_id)->first();
- $governorate=Governorate::where('id',$city->governorate_id)->first();
-$blood_type=BloodType::where('id',$don_request->blood_type_id)->first();
+$don_request=requests::with('city','bloodType')->where("id",$request->request_id)->first();
+$governorate=Governorate::where('id',$don_request->city->governorate_id )->first();
 
 
-$content='the donation request governorate:  '.$governorate->name."<br>".
-         'the donation request city:  ' .$city->name."<br>".
-         'the blood type:  '.$blood_type->name ;
+  $content='the donation request governorate:  '.$governorate->name."<br>".
+       'the donation request city:  ' .$don_request->city->name."<br>".
+         'the blood type:  '.$don_request->bloodType->name;
 
 $notification=  Notification::create([
   'title'=>'There is a new donation request',
@@ -326,8 +317,8 @@ $notification=  Notification::create([
  
  ]); 
 
-$clients=ClientGovernorate::select('client_id')->where('governorate_id', $governorate->id)->get();
-$i=0;
+ $clients=ClientGovernorate::select('client_id')->where('governorate_id', $governorate->id)->get();
+
 foreach($clients as $client){
 $client_notification= ClientNotification::create([
   'client_id'=>$client->client_id,
@@ -335,11 +326,10 @@ $client_notification= ClientNotification::create([
   'is_read'=>FALSE
  
  ]);
- $all_client_notification[$i]=$client_notification;
-$i++;
+ 
 } 
 
-$response=self::response(1,"kolo tamam",[$notification,$clients,$all_client_notification]);
+$response=self::response(1,"kolo tamam",[$notification,$clients]);
 return  $response;
 
 } 
@@ -359,40 +349,103 @@ return  $response;
 }
 public function getNotifications(){
 
+$notifications=Client::with('notifications')->where('id',5/*Auth::user()->id*/)->get();
 
-
-
-
-
+$response=self::response(1,"kolo tamam",$notifications);
+return  $response;
 }
 
-public function accountRetrieve(request $request){
+public function accountRetrieveSendPinCode(request $request){
   $phone=$request->phone;
   $client=Client::where('phone',$request->phone)->first();
-  $pin_code=null;
+ 
+  // $a=rand(111111,999999);
+
  if (!(is_null($client))){
- $pin_code= $client->pin_code;
+
  for ($i = 0; $i<6; $i++) 
         {
             if($i==0){
-            $a = mt_rand(0,9);
-            }else{  $a .= mt_rand(0,9);}
+            $pin_code = mt_rand(0,9);
+            }else{  $pin_code .= mt_rand(0,9);}
         }
- $client->pin_code=$a;
+ $client->pin_code=$pin_code;
  $client->save();
+ $response=self::response(1,"kolo tamam",$pin_code);
+return  $response;
+ 
+}}
+
+public function accountRetrieveCheckPinCode (request $request){
+ 
+  $client=Client::where('phone',$request->phone)->first();
+  $check_pin_code=FALSE;
+ if (!(is_null($client))){
+if($request->pin_code == $client->pin_code){
+  $check_pin_code=TRUE;
+}
  
 }
-
-$response=self::response(1,"kolo tamam",$pin_code);
+$response=self::response(1,"kolo tamam",$check_pin_code);
 return  $response;
+
+
 
 }
 
 public function passwordReset(request $request){
+  $request->validate([
+    'comesfrom_forgetpassword' =>['required' ],
+    'newpassword' => ['required', Rules\Password::defaults()]
+]);
+$client=Client::where('id',5/*Auth::user()->id*/)->first();
+$identical=FALSE;
 
+if(!($request->comesfrom_forgetpassword)){
+  $request->validate([
+    'oldpassword' => 'required',
+]);
 
+$credentials = ['email'=>$client->email,'password'=>$request->oldpassword];
 
+ $identical=auth('api-web')->validate($credentials);
+
+}
+
+if ($identical || $request->comesfrom_forgetpassword){
+
+  $client->password = Hash::make($request->newpassword);
+  $client->save();
   
+  } 
+
+$response=self::response(1,"kolo tamam",[]);
+return  $response;
+
+
+}
+
+public function contacts(request $request){
+  $request->validate([
+    'phone' => ['required','numeric'],
+    'title' => ['string','max:200'],
+    'msg' => ['required'],
+    
+]);
+
+$contact=  Contact::create([
+  'client_id' =>  5/*Auth::user()->id*/, 
+  'phone' => $request->phone, 
+  'title' => $request->title,  
+  'msg'=> $request->msg,
+ 
+]);  
+
+//$contact->client_id = 5/*Auth::user()->id*/;
+//$contact->save();
+//if u run this code make the client_id gaurded
+$response=self::response(1,"kolo tamam",$contact);
+return  $response;
 
 
 }

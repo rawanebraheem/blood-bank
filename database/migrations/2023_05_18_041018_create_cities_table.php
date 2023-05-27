@@ -8,10 +8,10 @@ class CreateCitiesTable extends Migration {
 	public function up()
 	{
 		Schema::create('cities', function(Blueprint $table) {
-			$table->increments('id');
+			$table->bigIncrements('id');
 			$table->timestamps();
 			$table->string('name');
-			$table->bigInteger('governorate_id')->unsigned();
+			//$table->bigInteger('governorate_id')->unsigned();
 		});
 	}
 

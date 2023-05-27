@@ -19,22 +19,22 @@ class Request extends Model
 
     public function city()
     {
-        return $this->belongsTo('City', 'city_id');
+        return $this->belongsTo(City::class, 'city_id');
     }
 
     public function bloodType()
     {
-        return $this->belongsTo('BloodType', 'blood_type_id');
+        return $this->belongsTo(BloodType::class, 'blood_type_id');
     }
 
-    public function client()
+    public function client() 
     {
-        return $this->hasOne('Client', 'client_id');
+        return $this->hasOne(Client::class, 'client_id');
     }
 
     public function notifications()
     {
-        return $this->hasMany('Notification', 'request_id');
+        return $this->hasMany(Notification::class, 'request_id');
     }
 
 }
