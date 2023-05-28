@@ -29,38 +29,38 @@ Route::prefix('v1')->group(function () {
     Route::post('/register',  [AuthController::class, 'registration']);
     Route::post('/login',  [AuthController::class, 'login']);
     Route::get('/settings',  [MainController::class, 'settings']);   
+
+
+
+
+
+    
+Route::middleware('auth:sanctum')->group(function () { 
+    Route::post('/logout',  [AuthController::class, 'logout']);
+    Route::get('/categories',  [MainController::class, 'categories']); 
+    Route::post('/articles',  [MainController::class, 'articles']);
+    Route::post('/articlessearch',  [MainController::class, 'articlesSearch']);   
+    Route::post('/article',  [MainController::class, 'article']);     
+    Route::get('/getclientdata',  [MainController::class, 'getClientData']);      
+    Route::post('/setclientdata',  [MainController::class, 'setClientData']);  
+    Route::get('/getrequests',  [MainController::class, 'getRequests']);
+    Route::post('/createrequest',  [MainController::class, 'createRequest']);      
+    Route::get('/getnotificationsettings',  [MainController::class, 'getNotificationSettings']);
+    Route::post('/setnotificationsettings',  [MainController::class, 'setNotificationSettings']);
+    Route::post('/createnotificationrequest',  [MainController::class, 'createNotificationRequest']);
+    Route::post('/getnotification',  [MainController::class, 'getNotification']);
+    Route::get('/getnotifications',  [MainController::class, 'getNotifications']); 
+    Route::post('/accountretrievesendpincode',  [MainController::class, 'accountRetrieveSendPinCode']); 
+    Route::post('/accountretrievecheckpincode',  [MainController::class, 'accountRetrieveCheckPinCode']);   
+    
+    Route::post('/passwordreset',  [MainController::class, 'passwordReset']); 
+    Route::post('/contacts',  [MainController::class, 'contacts']);       
+    
+    
+    }); 
  
  
  
    
 });   
 
-Route::prefix('v1')->group(function () { 
-Route::post('/logout',  [AuthController::class, 'logout']);
-Route::get('/categories',  [MainController::class, 'categories']); 
-Route::post('/articles',  [MainController::class, 'articles']);
-Route::post('/articlessearch',  [MainController::class, 'articlesSearch']);   
-Route::post('/article',  [MainController::class, 'article']);     
-Route::get('/getclientdata',  [MainController::class, 'getClientData']);      
-Route::post('/setclientdata',  [MainController::class, 'setClientData']);  
-Route::get('/getrequests',  [MainController::class, 'getRequests']);
-Route::post('/createrequest',  [MainController::class, 'createRequest']);      
-Route::get('/getnotificationsettings',  [MainController::class, 'getNotificationSettings']);
-Route::post('/setnotificationsettings',  [MainController::class, 'setNotificationSettings']);
-Route::post('/createnotificationrequest',  [MainController::class, 'createNotificationRequest']);
-Route::post('/getnotification',  [MainController::class, 'getNotification']);
-Route::get('/getnotifications',  [MainController::class, 'getNotifications']); 
-Route::post('/accountretrievesendpincode',  [MainController::class, 'accountRetrieveSendPinCode']); 
-Route::post('/accountretrievecheckpincode',  [MainController::class, 'accountRetrieveCheckPinCode']);   
-
-Route::post('/passwordreset',  [MainController::class, 'passwordReset']); 
-Route::post('/contacts',  [MainController::class, 'contacts']);       
-
-
-
-
-
-
-
-
-}); 

@@ -12,7 +12,7 @@ use App\Models\Client;
 
 class AuthController extends Controller
 {
-    private function response($status,$msg,$data){
+    private function response($status,$msg,$data=null){
         $response=[
             'status'=>$status,
             'msg'=>$msg, 
@@ -59,7 +59,7 @@ class AuthController extends Controller
 
         $client=$client->toArray();
         array_push($client,['token'=>$token]); 
-        $response=self::response(1,"kolo tamam",$client);
+        $response=self::response(1,"success",$client);
         return $response; 
 
     }
@@ -71,23 +71,26 @@ class AuthController extends Controller
     public function login(request $request){
        
         $request->validate([
-            'email' => 'required', 
+            'phone' => 'required', 
             'password' => 'required',
         ]);
      
-        $credentials = $request->only('email', 'password');
+        $credentials = $request->only('phone', 'password');
           
          if ( auth('api-web')->validate($credentials) ) {
 
-         $client=Client::where('email',$request->email)->first(); 
+         $client=Client::where('phone',$request->phone)->first(); 
     
           $token=$client->createToken('token')->plainTextToken;
            $client=$client->toArray();
          array_push($client,['token'=>$token]); 
 
-          $response=self::response(1,"kolo tamam",$client);
+          $response=self::response(1,"success",$client);
            return $response; 
-          }
+          }else{ 
+            
+            $response=self::response(0,"failed");
+            return $response;  }
    //look when i use the get() instead of first it doesnot work
         //  return ....... what shoud i return here;
 
@@ -99,7 +102,7 @@ class AuthController extends Controller
           public function logout(request $request){
          //how it can knows if the logout success to return 1 or not
             Auth::logout();
-            $response=self::response(1,"kolo tamam",[]);
+            $response=self::response(1,'success');
             return $response; 
           }
 

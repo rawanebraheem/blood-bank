@@ -50,7 +50,7 @@ class MainController extends Controller
 
  public function governorates(){
   $governorates=Governorate::all();
-  $response=self::response(1,"kolo tamam",$governorates);
+  $response=self::response(1,"success",$governorates);
   return  $response;  
     }
 
@@ -62,15 +62,16 @@ class MainController extends Controller
     $cities=City::all();
 
   }
-
-  return $cities; 
+  $response=self::response(1,"success",$cities);
+  return  $response; 
+  
 
  }   
 
  public function bloodTypes(){
  
   $bloodtypes=BloodType::all();
-  $response=self::response(1,"kolo tamam",$bloodtypes);
+  $response=self::response(1,"success",$bloodtypes);
   return  $response; 
     }
 
@@ -79,7 +80,7 @@ class MainController extends Controller
     public function categories(){ 
 
       $categories=Category::all(); 
-     $response=self::response(1,"kolo tamam",$categories);
+     $response=self::response(1,"success",$categories);
       return  $response; 
     }
 
@@ -92,10 +93,11 @@ class MainController extends Controller
 
       })->get(); 
 
+    
       $client_id=5;//Auth::user()->id;
       $fav_articles_ids=ArticleClient::select("article_id")->where('client_id', $client_id)->get();
-
-      $response=self::response(1,"kolo tamam",[$articles,$fav_articles_ids]); 
+    
+      $response=self::response(1,"success",[$articles,$fav_articles_ids]); 
       return $response;  
     }
 
@@ -111,7 +113,7 @@ class MainController extends Controller
            })->where('title', 'LIKE',  '%'.$request->search.'%')->get(); 
        
 
-      $response=self::response(1,"kolo tamam",$articles); 
+      $response=self::response(1,"success",$articles); 
           return $response;
 
      }
@@ -119,7 +121,7 @@ class MainController extends Controller
 
      public function article(request $request){
         $article= Article::where('id',$request->id)->first();
-        $response=self::response(1,"kolo tamam",$article); 
+        $response=self::response(1,"success",$article); 
         return $response;
      }
 
@@ -139,20 +141,21 @@ class MainController extends Controller
      $settings=[$notification_settings_text,$about_app,$phone,$email,$fb_link
      ,$tw_link,$insta_link,$youtube_link];
 
-     $response=self::response(1,"kolo tamam",$settings);  
+     $response=self::response(1,"success",$settings);  
      return $response;
 
    }
 
    public function getClientData(){
-    $client=Client::find(5);//Auth::user()->id);
-    $response=self::response(1,"kolo tamam",$client);  
+    $client=Auth::user()->id;
+    $response=self::response(1,"success",$client);  
     return $response;
    }
 
 
    public function setClientData(request $request){
-    $client=Client::find(1);//Auth::user();
+    //what will happend if two usrs do setClientData at the same time
+    $client=Auth::user();
     $client->email=0000;
     $client->phone=0000;
     $client->save(); 
@@ -169,10 +172,6 @@ class MainController extends Controller
 ]);  
 
 
-$client=Client::find(1);//Auth::user();
-$client->email=null;
-$client->phone=null;
-
 $client->name=$request->name;
 $client->email=$request->email;
 $client->password=$request->password;
@@ -185,7 +184,7 @@ $client->d_o_b=$request->d_o_b;
 $client->save();
 
 
-$response=self::response(1,"kolo tamam",$client);  
+$response=self::response(1,"success",$client);  
    return $response;
 
 
@@ -195,7 +194,7 @@ $response=self::response(1,"kolo tamam",$client);
   public function getRequests(){
  
     $requests=requests::all();
-    $response=self::response(1,"kolo tamam",$requests);
+    $response=self::response(1,"success",$requests);
     return  $response;  
    }
 
@@ -206,7 +205,7 @@ $response=self::response(1,"kolo tamam",$client);
       'patient_phone'=>['required'],
       'hospital_name'=>['required'],
       'hospital_address'=>['required'],
-      'bags_num' => ['numeric'],//,'confirmed'
+      'bags_num' => ['numeric'],
       'blood_type_id'=>['required','numeric'],
       'city_id'=>['required','numeric'],
       'patient_age'=>['numeric'],
@@ -231,12 +230,12 @@ $response=self::response(1,"kolo tamam",$client);
 //     'details'=>$request->details,  
 // ]);  
 $don_request = new requests($request->toArray());
-$don_request->client_id = 5 ;//Auth::user()->id;
+$don_request->client_id = Auth::user()->id;
 
 $don_request->save();
 
 
-$response=self::response(1,"kolo tamam",$don_request);
+$response=self::response(1,"success",$don_request);
 return  $response;  
    }
 
@@ -244,12 +243,12 @@ return  $response;
    public function getNotificationSettings(){
   
 
-  $client_governorates=Client::with('governorates')->where("id",5/*Auth::user()->id*/)->get();
-  $client_bloodtype=Client::with('bloodtypes')->where("id",5/*Auth::user()->id*/)->get();
+  $client_governorates=Client::with('governorates')->where("id",Auth::user()->id)->get();
+  $client_bloodtype=Client::with('bloodtypes')->where("id",Auth::user()->id)->get();
   
   
   
-   $response=self::response(1,"kolo tamam",[$client_governorates,$client_bloodtype]);
+   $response=self::response(1,"success",[$client_governorates,$client_bloodtype]);
    return  $response;  
   
   
@@ -257,46 +256,56 @@ return  $response;
 
 
    public function setNotificationSettings(request $request){
-    
-    if($request->has('blood_types_array') && $request->blood_types_array !=null ){
+    $request->validate([   
+      'blood_types_array'=>['required'],
+      'governorates_array'=>['required']
+
+     ]); 
+    if( $request->blood_types_array !=null ){
     $request->validate([ 
-      'blood_types_array'=>['required','array'],
+      'blood_types_array'=>['array'],
       "blood_types_array.*"  => ["numeric"],
     ]); 
   }
 
 
-  if( $request->has('governorates_array') && $request->governorates_array !=null ){
+  if( $request->governorates_array !=null ){
     $request->validate([ 
-      'governorates_array'=>['required','array'],
+      'governorates_array'=>['array'],
       "governorates_array.*"  => ["numeric"],
     ]); 
   }
+  BloodTypeClient::where("client_id",Auth::user()->id)->delete();
+  ClientGovernorate::where("client_id",Auth::user()->id)->delete();
 
 
 
-    BloodTypeClient::where("client_id",5/*Auth::user()->id*/)->delete();
-    ClientGovernorate::where("client_id",5/*Auth::user()->id*/)->delete();
-
-    if($request->has('blood_types_array') && $request->blood_types_array!=null){
+    if( $request->blood_types_array!=null){
+       $i=0;
     foreach ($request->blood_types_array as $blood_type){
-      BloodTypeClient::create([
-        "client_id"=>5 /*Auth::user()->id*/,
+      $blood_types_client [$i] =BloodTypeClient::create([
+        "client_id"=>Auth::user()->id,
         "blood_type_id"=>$blood_type,
       
        ]);  
-     
+       $i++;
     }}
  
-    if( $request->has('governorates_array') && $request->governorates_array !=null ){
+    if( $request->governorates_array !=null ){
+      $i=0;
+
     foreach ($request->governorates_array as $governorate){
-      ClientGovernorate::create([
-        "client_id"=>5 /*Auth::user()->id*/,
+      $client_governorates[$i] =ClientGovernorate::create([
+        "client_id"=>Auth::user()->id,
         "governorate_id"=>$governorate,
       
-       ]);   }}
+       ]);   
+       $i++;
+      }}
+
      
-   
+$response=self::response(1,"success",[$blood_types_client,$client_governorates]);
+return  $response;
    
 }
 
@@ -317,9 +326,24 @@ $notification=  Notification::create([
  
  ]); 
 
- $clients=ClientGovernorate::select('client_id')->where('governorate_id', $governorate->id)->get();
+ $governorate_clients=ClientGovernorate::select('client_id')->where('governorate_id', $governorate->id)->get();
+ $bloodtype_clients =BloodTypeClient::select('client_id')->where('blood_type_id', $don_request->bloodType->id)->get();
+ $i=0;
+foreach($governorate_clients as $governorate_client){
+  $governorate_clients_array[$i]=$governorate_client->client_id;
+  $i++;
+}
+$i=0;
+foreach($bloodtype_clients as $bloodtype_client){
+ 
+ if(in_array ($bloodtype_client->client_id ,$governorate_clients_array))
+ {$clients[$i]=$bloodtype_client->client_id ;
+  $i++;
+}
+}
 
-foreach($clients as $client){
+
+foreach($governorate_clients as $client){
 $client_notification= ClientNotification::create([
   'client_id'=>$client->client_id,
   'notification_id'=>$notification->id, 
@@ -328,34 +352,38 @@ $client_notification= ClientNotification::create([
  ]);
  
 } 
+foreach($governorate_clients as $client){echo $client->client_id;}
 
-$response=self::response(1,"kolo tamam",[$notification,$clients]);
-return  $response;
+ $response=self::response(1,"success",[$notification,$clients]);
+  return  $response;
 
 } 
 
 public function getNotification(request $request){
 $notification=Notification::where('id',$request->notification_id)->get();
-$notification_is_read=ClientNotification::where('client_id',5/*Auth::user()->id*/)->
+$notification_is_read=ClientNotification::where('client_id',Auth::user()->id)->
 where('notification_id',$request->notification_id)->first();
 
 
 $notification_is_read->is_read=TRUE;
 $notification_is_read->save();
 
-$response=self::response(1,"kolo tamam",$notification);
+$response=self::response(1,"success",$notification);
 return  $response;
 
 }
 public function getNotifications(){
 
-$notifications=Client::with('notifications')->where('id',5/*Auth::user()->id*/)->get();
+$notifications=Client::with('notifications')->where('id',Auth::user()->id)->get();
 
-$response=self::response(1,"kolo tamam",$notifications);
-return  $response;
+$response=self::response(1,"success",$notifications);
+return $response;
 }
 
 public function accountRetrieveSendPinCode(request $request){
+  $request->validate([
+    'phone' => 'required', 
+]);
   $phone=$request->phone;
   $client=Client::where('phone',$request->phone)->first();
  
@@ -371,25 +399,33 @@ public function accountRetrieveSendPinCode(request $request){
         }
  $client->pin_code=$pin_code;
  $client->save();
- $response=self::response(1,"kolo tamam",$pin_code);
+ $response=self::response(1,"success",$pin_code);
 return  $response;
  
-}}
+}else{ 
+$response=self::response(0,"failed");
+return  $response;
+}
+
+}
 
 public function accountRetrieveCheckPinCode (request $request){
  
   $client=Client::where('phone',$request->phone)->first();
-  $check_pin_code=FALSE;
  if (!(is_null($client))){
 if($request->pin_code == $client->pin_code){
   $check_pin_code=TRUE;
+  $response=self::response(1,"success",$check_pin_code);
+    return  $response;
+}else{
+  $check_pin_code=FALSE;
+  
 }
- 
-}
-$response=self::response(1,"kolo tamam",$check_pin_code);
+$response=self::response(1,"success",$check_pin_code);
 return  $response;
 
-
+ 
+}
 
 }
 
@@ -398,7 +434,7 @@ public function passwordReset(request $request){
     'comesfrom_forgetpassword' =>['required' ],
     'newpassword' => ['required', Rules\Password::defaults()]
 ]);
-$client=Client::where('id',5/*Auth::user()->id*/)->first();
+$client=Client::where('id',Auth::user()->id)->first();
 $identical=FALSE;
 
 if(!($request->comesfrom_forgetpassword)){
@@ -419,7 +455,7 @@ if ($identical || $request->comesfrom_forgetpassword){
   
   } 
 
-$response=self::response(1,"kolo tamam",[]);
+$response=self::response(1,"success",[]);
 return  $response;
 
 
@@ -434,7 +470,7 @@ public function contacts(request $request){
 ]);
 
 $contact=  Contact::create([
-  'client_id' =>  5/*Auth::user()->id*/, 
+  'client_id' =>  Auth::user()->id, 
   'phone' => $request->phone, 
   'title' => $request->title,  
   'msg'=> $request->msg,
@@ -444,7 +480,7 @@ $contact=  Contact::create([
 //$contact->client_id = 5/*Auth::user()->id*/;
 //$contact->save();
 //if u run this code make the client_id gaurded
-$response=self::response(1,"kolo tamam",$contact);
+$response=self::response(1,"success",$contact);
 return  $response;
 
 
