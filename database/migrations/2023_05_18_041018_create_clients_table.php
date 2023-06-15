@@ -19,6 +19,7 @@ class CreateClientsTable extends Migration {
 			$table->date('last_donation_date');
 			//$table->bigInteger('city_id')->unsigned();
 			$table->integer('pin_code')->nullable();
+			$table->boolean('is_active')->default(1);
                         
         
 		});

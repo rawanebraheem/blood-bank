@@ -1,117 +1,90 @@
 <?php
 
 namespace App\Http\Controllers;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Auth; 
-use Illuminate\Support\Facades\Session;
+
+use App\Models\Client;
+use App\Traits\ApiResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rules;
 use Illuminate\Validation\Rule;
-use Illuminate\Http\Request;
-use App\Models\Client;
-
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
-    private function response($status,$msg,$data=null){
-        $response=[
-            'status'=>$status,
-            'msg'=>$msg, 
-            'data'=>$data
-            
-          ];
-          return  $response;
-    }
+    use ApiResponse;
 
-   
-
-
-    public function registration(request $request){
+    public function registration(request $request)
+    {
         $request->validate([
             'name' => ['required', 'string', 'max:70'],
-            'email' => ['required', 'string', 'email', 'max:60', 'unique:'.Client::class],
-            'password' => ['required',Rules\Password::defaults() ],//,'confirmed'
-            'phone'=>['required','unique:'.Client::class],
-            'blood_type_id'=>['required','numeric'],
-            'last_donation_date'=>['required'],
-            'city_id'=>['required','numeric'],
-             'd_o_b'=>['required']
-    
-        ]);  
+            'email' => ['required', 'string', 'email', 'max:60', 'unique:' . Client::class],
+            'password' => ['required', Rules\Password::defaults()], //,'confirmed'
+            'phone' => ['required', 'unique:' . Client::class],
+            'blood_type_id' => ['required', 'numeric'],
+            'last_donation_date' => ['required'],
+            'city_id' => ['required', 'numeric'],
+            'd_o_b' => ['required'],
+        ]);
 
-        
-        $client = Client::create([
-            'name' => $request->name, 
-            'email' => $request->email,  
-            'phone'=> $request->phone,
-            'password' => Hash::make($request->password),
-            'blood_type_id'=>$request->blood_type_id,
-            'last_donation_date'=>$request->last_donation_date,
-            'city_id'=>$request->city_id, 
-            'd_o_b'=>$request->d_o_b,  
-            
-            
-        ]);   
-      
-        $client->pin_code=null;
-        $token=$client->createToken('token')->plainTextToken;
+        $request->merge(['password' => bcrypt($request->password)]);
+        $client = Client::create($request->all());
+
+        $client->pin_code = null;
         $client->save();
-        
 
-        $client=$client->toArray();
-        array_push($client,['token'=>$token]); 
-        $response=self::response(1,"success",$client);
-        return $response; 
+        $token = $client->createToken('token')->plainTextToken;
+
+        $client->token = $token;
+
+        return self::response(1, "success", $client);
 
     }
 //sent the token in the registration
 ////sent the token in the login
 
+    public function login(request $request)
+    {
 
-
-    public function login(request $request){
-       
         $request->validate([
-            'phone' => 'required', 
+            'phone' => 'required',
             'password' => 'required',
         ]);
-     
-        $credentials = $request->only('phone', 'password');
-          
-         if ( auth('api-web')->validate($credentials) ) {
 
-         $client=Client::where('phone',$request->phone)->first(); 
-    
-          $token=$client->createToken('token')->plainTextToken;
-           $client=$client->toArray();
-         array_push($client,['token'=>$token]); 
+        $credentials = $request->only('phone', 'password')+['is_active'=> 1];
 
-          $response=self::response(1,"success",$client);
-           return $response; 
-          }else{ 
-            
-            $response=self::response(0,"failed");
-            return $response;  }
-   //look when i use the get() instead of first it doesnot work
+        if (auth('api-web')->validate($credentials)) {
+
+            $client = Client::where('phone', $request->phone)->first();
+
+            $token = $client->createToken('token')->plainTextToken;
+            $client = $client->toArray();
+            $client['token'] = $token;
+           
+            return self::response(1, "success", $client);
+        } else {
+
+            return self::response(0, "failed");
+        }
+        //look when i use the get() instead of first it doesnot work
         //  return ....... what shoud i return here;
 
-         
-          } 
+    }
 
+    public function logout($client=null)
+    {
+        //how it can knows if the logout success to return 1 or not
+        if($client){
+        $client->tokens()->delete();
+         //$client->currentAccessToken()->delete();
 
+        }else{
+          auth('sanctum')->user()->currentAccessToken()->delete();
+        }
 
-          public function logout(request $request){
-         //how it can knows if the logout success to return 1 or not
-            Auth::logout();
-            $response=self::response(1,'success');
-            return $response; 
-          }
+        return self::response(1, 'success');
+        
+        
+    }
 
-
-          
-       
-
-      
 }
-
-
-

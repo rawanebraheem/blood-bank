@@ -22,11 +22,12 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+// naming : kebab-case
 Route::prefix('v1')->group(function () {
     Route::get('/governorates',  [MainController::class, 'governorates']);
     Route::post('/cities',  [MainController::class, 'cities']);
     Route::get('/bloodtypes',  [MainController::class, 'bloodTypes']);
-    Route::post('/register',  [AuthController::class, 'registration']);
+    Route::post('/registration',  [AuthController::class, 'registration']);
     Route::post('/login',  [AuthController::class, 'login']);
     Route::get('/settings',  [MainController::class, 'settings']);   
 
@@ -36,24 +37,24 @@ Route::prefix('v1')->group(function () {
 
     
 Route::middleware('auth:sanctum')->group(function () { 
-    Route::post('/logout',  [AuthController::class, 'logout']);
+    Route::post('logout',  [AuthController::class, 'logout']);
     Route::get('/categories',  [MainController::class, 'categories']); 
     Route::post('/articles',  [MainController::class, 'articles']);
-    Route::post('/articlessearch',  [MainController::class, 'articlesSearch']);   
+    Route::post('/articles-search',  [MainController::class, 'articlesSearch']);   
     Route::post('/article',  [MainController::class, 'article']);     
-    Route::get('/getclientdata',  [MainController::class, 'getClientData']);      
-    Route::post('/setclientdata',  [MainController::class, 'setClientData']);  
-    Route::get('/getrequests',  [MainController::class, 'getRequests']);
-    Route::post('/createrequest',  [MainController::class, 'createRequest']);      
-    Route::get('/getnotificationsettings',  [MainController::class, 'getNotificationSettings']);
-    Route::post('/setnotificationsettings',  [MainController::class, 'setNotificationSettings']);
-    Route::post('/createnotificationrequest',  [MainController::class, 'createNotificationRequest']);
-    Route::post('/getnotification',  [MainController::class, 'getNotification']);
-    Route::get('/getnotifications',  [MainController::class, 'getNotifications']); 
-    Route::post('/accountretrievesendpincode',  [MainController::class, 'accountRetrieveSendPinCode']); 
-    Route::post('/accountretrievecheckpincode',  [MainController::class, 'accountRetrieveCheckPinCode']);   
+    Route::get('/get-client-data',  [MainController::class, 'getClientData']);      
+    Route::post('/set-client-data',  [MainController::class, 'setClientData']);  
+    Route::get('/get-requests',  [MainController::class, 'getRequests']);
+    Route::post('/create-request',  [MainController::class, 'createRequest']);      
+    Route::get('/get-notification-settings',  [MainController::class, 'getNotificationSettings']);
+    Route::post('/set-notification-settings',  [MainController::class, 'setNotificationSettings']);
+    Route::post('/create-notification-request',  [MainController::class, 'createNotificationRequest']);
+    Route::post('/get-notification',  [MainController::class, 'getNotification']);
+    Route::get('/get-notifications',  [MainController::class, 'getNotifications']); 
+    Route::post('/account-retrieve-send-pincode',  [MainController::class, 'accountRetrieveSendPinCode']); 
+    Route::post('/account-retrieve-check-pincode',  [MainController::class, 'accountRetrieveCheckPinCode']);   
     
-    Route::post('/passwordreset',  [MainController::class, 'passwordReset']); 
+    Route::post('/password-reset',  [MainController::class, 'passwordReset']); 
     Route::post('/contacts',  [MainController::class, 'contacts']);       
     
     

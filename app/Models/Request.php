@@ -29,7 +29,7 @@ class Request extends Model
 
     public function client() 
     {
-        return $this->hasOne(Client::class, 'client_id');
+        return $this->belongsTo(Client::class);
     }
 
     public function notifications()

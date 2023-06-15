@@ -17,7 +17,7 @@ class Client extends Authenticatable
     protected $table = 'clients';
     public $timestamps = true;
     protected $guarded = array('pin_code');
-    protected $fillable = array('name', 'phone', 'email', 'password', 'd_o_b', 'blood_type_id', 'last_donation_date', 'city_id');
+    protected $fillable = array('name', 'phone', 'email', 'password', 'd_o_b', 'blood_type_id', 'last_donation_date', 'city_id','is_active');
 
     public function bloodType()
     {
@@ -31,7 +31,7 @@ class Client extends Authenticatable
 
     public function requests()
     {
-        return $this->hasMany(Request::class, 'client_id');
+        return $this->hasMany(Request::class);
     }
 
     public function governorates()
@@ -50,7 +50,7 @@ class Client extends Authenticatable
     }
 
     public function articles()
-    { 
+    {  
         return $this->belongsToMany(Article::class);
     }
 
