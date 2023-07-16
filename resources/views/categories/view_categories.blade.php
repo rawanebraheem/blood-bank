@@ -17,7 +17,13 @@
                 <tr>
                     <td>{{ $category->id }}</td>
                     <td>{{ $category->name }} </td>
+                    @can('category-edit')
+
                     <td><a href="{{ url(route('categories.edit', $category->id)) }}">Edit category</a> </td>
+                    @endcan
+
+                    @can('category-delete')
+
                     <td>
                         <form action="{{ url(route('categories.destroy', $category->id)) }}" method="POST">
                             @csrf
@@ -25,6 +31,7 @@
                             <button type="submit">Delete category</button>
                         </form>
                     </td>
+                    @endcan
 
 
 

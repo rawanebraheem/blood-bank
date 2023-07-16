@@ -34,6 +34,8 @@
                     <td>{{ $contact->msg }}</td>
                     <td>{{ $contact->client->name }} </td>
                     <td>{{ $contact->client->phone }}</td>
+
+                    @can('contact-delete')
                     <td>
                         <form method="POST" action="{{ url('contacts-destroy', $contact->id) }}">
                             @csrf
@@ -43,6 +45,7 @@
 
 
                     </td>
+                    @endcan
 
                 </tr>
             @endforeach

@@ -20,14 +20,22 @@
                 <tr>
                     <td>{{ $governorate->id }}</td>
                     <td>{{ $governorate->name }}</td>
-                    <td><a href="{{ url(route('governorates.edit', $governorate->id)) }}">Edit governorate</a></td>
+
+                    @can('governorate-edit')
+                    <td><a href="{{ url(route('governorates.edit', $governorate->id)) }}">Edit governorate</a>
+                    </td>
+                    @endcan
+                    @can('governorate-delete')
                     <td>
+                        
                         <form action="{{ url(route('governorates.destroy', $governorate->id)) }}" method="POST">
                             @csrf
                             @method('delete')
                             <button type="submit">Delete Gov</button>
                         </form>
                     </td>
+                    @endcan
+
 
                 </tr>
             @endforeach

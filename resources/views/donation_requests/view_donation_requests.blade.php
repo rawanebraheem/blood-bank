@@ -34,6 +34,8 @@
                     <td>{{ $donation_request->patient_phone }}</td>
                     <td>{{ $donation_request->hospital_name }}</td>
                     <td>{{ $donation_request->bags_num }}</td>
+
+                    @can('donation-request-delete')
                     <td>
                         <form method="POST" action="{{ url('donation-requests-destroy', $donation_request->id) }}">
                             @csrf
@@ -43,9 +45,13 @@
 
 
                     </td>
+                    @endcan
+                    @can('donation-request-show')
                     <td>
                         <a href="{{ url('donation-requests-show', $donation_request->id) }}">View donation request</a>
                     </td>
+                    @endcan
+
 
 
 

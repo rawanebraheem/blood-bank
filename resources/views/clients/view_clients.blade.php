@@ -40,7 +40,12 @@
                 <td>{{ $client->bloodType->name }}</td>
                 <td>{{ $client->city->name }}</td>
                 <td>{{ $client->is_active }}</td>
+                @can('client-edit')
+
                 <td> <a href="{{ url(route('clients.edit', $client->id)) }}">Edit client</a></td>
+                @endcan
+
+                @can('client-delete')
                 <td>
                     <form action="{{ url(route('clients.destroy', $client->id)) }}" method="POST">
                         @csrf
@@ -48,6 +53,7 @@
                         <button type="submit">Delete client</button>
                     </form>
                 </td>
+                @endcan
 
 
 

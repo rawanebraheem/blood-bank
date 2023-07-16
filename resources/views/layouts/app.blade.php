@@ -48,7 +48,6 @@
                         <a class="dropdown-item" href="{{ route('profile.edit') }}">Profile</a>
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
-
                             <input type="submit" value="     Log Out">
                         </form>
                         <a class="dropdown-item" href="{{ url('/dashboard') }}">dashboard</a>
@@ -65,12 +64,12 @@
 
         <!-- Main Sidebar Container -->
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
-            
+
 
 
             <!-- Sidebar -->
             <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-                
+
 
             </div>
 
@@ -84,131 +83,229 @@
                     <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
 
-                    {{-- client --}}
-                    <li class="nav-header">Clients</li>
-                    <li class="nav-item">
-                        <a href="{{ url(route('clients.index')) }}" class="nav-link">
-                            <i class="fas fa-circle nav-icon"></i>
-                            <p>View All Clients</p>
-                        </a>
-                    </li>
 
-                    <li class="nav-item">
-                        <a href="{{ url(route('clients.create')) }}" class="nav-link">
-                            <i class="fas fa-circle nav-icon"></i>
-                            <p>Add Clients</p>
-                        </a>
-                    </li>
+                    {{-- users --}}
+                    @if (auth()->user()->can('user-list') ||
+                            auth()->user()->can('user-create'))
+                        <li class="nav-header">Users</li>
+                        @can('user-list')
+                            <li class="nav-item">
+                                <a href="{{ url(route('users.index')) }}" class="nav-link">
+                                    <i class="fas fa-circle nav-icon"></i>
+                                    <p>View All Users</p>
+                                </a>
+                            </li>
+                        @endcan
+                        @can('user-create')
+                            <li class="nav-item">
+                                <a href="{{ url(route('users.create')) }}" class="nav-link">
+                                    <i class="fas fa-circle nav-icon"></i>
+                                    <p>Add Users</p>
+                                </a>
+                            </li>
+                        @endcan
+                    @endif
+
+                    {{-- users --}}
+
+                    {{-- roles --}}
+                    @if (auth()->user()->can('role-list') ||
+                            auth()->user()->can('role-create'))
+                        <li class="nav-header">Roles</li>
+                        @can('role-list')
+                            <li class="nav-item">
+                                <a href="{{ url(route('roles.index')) }}" class="nav-link">
+                                    <i class="fas fa-circle nav-icon"></i>
+                                    <p>View All Roles</p>
+                                </a>
+                            </li>
+                        @endcan
+
+                        @can('role-create')
+                            <li class="nav-item">
+                                <a href="{{ url(route('roles.create')) }}" class="nav-link">
+                                    <i class="fas fa-circle nav-icon"></i>
+                                    <p>Add Roles</p>
+                                </a>
+                            </li>
+                        @endcan
+                    @endif
+
+
+                    {{-- roles --}}
+
+                    {{-- client --}}
+                    @if (auth()->user()->can('client-list') ||
+                            auth()->user()->can('client-create'))
+                        <li class="nav-header">Clients</li>
+                        @can('client-list')
+                            <li class="nav-item">
+                                <a href="{{ url(route('clients.index')) }}" class="nav-link">
+                                    <i class="fas fa-circle nav-icon"></i>
+                                    <p>View All Clients</p>
+                                </a>
+                            </li>
+                        @endcan
+                        @can('client-create')
+                            <li class="nav-item">
+                                <a href="{{ url(route('clients.create')) }}" class="nav-link">
+                                    <i class="fas fa-circle nav-icon"></i>
+                                    <p>Add Clients</p>
+                                </a>
+                            </li>
+                        @endcan
+                    @endif
+
 
                     {{-- client --}}
 
                     {{-- Governorates --}}
-                    <li class="nav-header">Governorates</li>
-                    <li class="nav-item">
-                        <a href="{{ url(route('governorates.index')) }}" class="nav-link">
-                            <i class="fas fa-circle nav-icon"></i>
-                            <p>View All Governorates</p>
-                        </a>
-                    </li>
+                    @if (auth()->user()->can('governorate-list') ||
+                            auth()->user()->can('governorate-create'))
+                        <li class="nav-header">Governorates</li>
+                        @can('governorate-list')
+                            <li class="nav-item">
+                                <a href="{{ url(route('governorates.index')) }}" class="nav-link">
+                                    <i class="fas fa-circle nav-icon"></i>
+                                    <p>View All Governorates</p>
+                                </a>
+                            </li>
+                        @endcan
+                        @can('governorate-create')
+                            <li class="nav-item">
+                                <a href="{{ url(route('governorates.create')) }}" class="nav-link">
+                                    <i class="fas fa-circle nav-icon"></i>
+                                    <p>Add Governorates</p>
+                                </a>
+                            </li>
+                        @endcan
+                    @endif
 
-                    <li class="nav-item">
-                        <a href="{{ url(route('governorates.create')) }}" class="nav-link">
-                            <i class="fas fa-circle nav-icon"></i>
-                            <p>Add Governorates</p>
-                        </a>
-                    </li>
 
 
                     {{-- Governorates --}}
 
                     {{-- Cities --}}
-                    <li class="nav-header">Cities</li>
-                    <li class="nav-item">
-                        <a href="{{ url(route('cities.index')) }}" class="nav-link">
-                            <i class="fas fa-circle nav-icon"></i>
-                            <p>View All Cities</p>
-                        </a>
-                    </li>
+                    @if (auth()->user()->can('city-list') ||
+                            auth()->user()->can('city-create'))
+                        <li class="nav-header">Cities</li>
+                        @can('city-list')
+                            <li class="nav-item">
+                                <a href="{{ url(route('cities.index')) }}" class="nav-link">
+                                    <i class="fas fa-circle nav-icon"></i>
+                                    <p>View All Cities</p>
+                                </a>
+                            </li>
+                        @endcan
 
-                    <li class="nav-item">
-                        <a href="{{ url(route('cities.create')) }}" class="nav-link">
-                            <i class="fas fa-circle nav-icon"></i>
-                            <p>Add Cities</p>
-                        </a>
-                    </li>
+                        @can('city-create')
+                            <li class="nav-item">
+                                <a href="{{ url(route('cities.create')) }}" class="nav-link">
+                                    <i class="fas fa-circle nav-icon"></i>
+                                    <p>Add Cities</p>
+                                </a>
+                            </li>
+                        @endcan
+                    @endif
 
 
                     {{-- Cities --}}
 
                     {{-- Categories --}}
-                    <li class="nav-header">Categories</li>
-                    <li class="nav-item">
-                        <a href="{{ url(route('categories.index')) }}" class="nav-link">
-                            <i class="fas fa-circle nav-icon"></i>
-                            <p>View All Categories</p>
-                        </a>
-                    </li>
+                    @if (auth()->user()->can('category-list') ||
+                            auth()->user()->can('category-create'))
+                        <li class="nav-header">Categories</li>
+                        @can('category-list')
+                            <li class="nav-item">
+                                <a href="{{ url(route('categories.index')) }}" class="nav-link">
+                                    <i class="fas fa-circle nav-icon"></i>
+                                    <p>View All Categories</p>
+                                </a>
+                            </li>
+                        @endcan
 
-                    <li class="nav-item">
-                        <a href="{{ url(route('categories.create')) }}" class="nav-link">
-                            <i class="fas fa-circle nav-icon"></i>
-                            <p>Add Categories</p>
-                        </a>
-                    </li>
+                        @can('category-create')
+                            <li class="nav-item">
+                                <a href="{{ url(route('categories.create')) }}" class="nav-link">
+                                    <i class="fas fa-circle nav-icon"></i>
+                                    <p>Add Categories</p>
+                                </a>
+                            </li>
+                        @endcan
+                    @endif
 
 
                     {{-- Categories --}}
 
                     {{-- Articles --}}
-                    <li class="nav-header">Articles</li>
-                    <li class="nav-item">
-                        <a href="{{ url(route('articles.index')) }}" class="nav-link">
-                            <i class="fas fa-circle nav-icon"></i>
-                            <p>View All Articles</p>
-                        </a>
-                    </li>
+                    @if (auth()->user()->can('article-list') ||
+                            auth()->user()->can('article-create'))
+                        <li class="nav-header">Articles</li>
+                        @can('article-list')
+                            <li class="nav-item">
+                                <a href="{{ url(route('articles.index')) }}" class="nav-link">
+                                    <i class="fas fa-circle nav-icon"></i>
+                                    <p>View All Articles</p>
+                                </a>
+                            </li>
+                        @endcan
 
-                    <li class="nav-item">
-                        <a href="{{ url(route('articles.create')) }}" class="nav-link">
-                            <i class="fas fa-circle nav-icon"></i>
-                            <p>Add Articles</p>
-                        </a>
-                    </li>
-
+                        @can('article-create')
+                            <li class="nav-item">
+                                <a href="{{ url(route('articles.create')) }}" class="nav-link">
+                                    <i class="fas fa-circle nav-icon"></i>
+                                    <p>Add Articles</p>
+                                </a>
+                            </li>
+                        @endcan
+                    @endif
 
                     {{-- Articles --}}
 
                     {{-- Donation Requests --}}
-                    <li class="nav-header">Donation Requests</li>
-                    <li class="nav-item">
-                        <a href="{{ url('donation-requests-index') }}" class="nav-link">
-                            <i class="fas fa-circle nav-icon"></i>
-                            <p>View Donation Requests</p>
-                        </a>
-                    </li>
+                    @can('donation-request-list')
+                        <li class="nav-header">Donation Requests</li>
+                       
+                            <li class="nav-item">
+                                <a href="{{ url('donation-requests-index') }}" class="nav-link">
+                                    <i class="fas fa-circle nav-icon"></i>
+                                    <p>View Donation Requests</p>
+                                </a>
+                            </li>
+                        @endcan
+                    
+
 
                     {{-- Donation Requests --}}
 
                     {{-- Contacts --}}
-                    <li class="nav-header">Contacts</li>
-                    <li class="nav-item">
-                        <a href="{{ url('contacts-index') }}" class="nav-link">
-                            <i class="fas fa-circle nav-icon"></i>
-                            <p>View All Contacts</p>
-                        </a>
-                    </li>
-
+                    @can('contact-list')
+                        <li class="nav-header">Contacts</li>
+                        
+                            <li class="nav-item">
+                                <a href="{{ url('contacts-index') }}" class="nav-link">
+                                    <i class="fas fa-circle nav-icon"></i>
+                                    <p>View All Contacts</p>
+                                </a>
+                            </li>
+                        @endcan
+                    
 
                     {{-- Contacts --}}
 
                     {{-- Settings --}}
-                    <li class="nav-header">Settings</li>
-                    <li class="nav-item">
-                        <a href="{{ url('settings-edit') }}" class="nav-link">
-                            <i class="fas fa-circle nav-icon"></i>
-                            <p>Edit Settings</p>
-                        </a>
-                    </li>
+                    @can('settings-edit')
+                        <li class="nav-header">Settings</li>
+                        
+                            <li class="nav-item">
+                                <a href="{{ url('settings-edit') }}" class="nav-link">
+                                    <i class="fas fa-circle nav-icon"></i>
+                                    <p>Edit Settings</p>
+                                </a>
+                            </li>
+                        @endcan
+                  
+
 
                     {{-- Settings --}}
 
@@ -231,7 +328,7 @@
                         <div class="col-sm-6">
                             <h1>{{ $header }}</h1>
                         </div>
-                       
+
                     </div>
                 </div>
             </section>
@@ -268,10 +365,7 @@
     <!-- AdminLTE App -->
     <script src="{{ asset('dist/js/adminlte.min.js') }}"></script>
     <!-- AdminLTE for demo purposes -->
-    <script src="{{ asset('dist/js/demo.js') }}"></script>
+    {{-- <script src="{{ asset('dist/js/demo.js') }}"></script> --}}
 </body>
 
 </html>
-
-
-

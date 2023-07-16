@@ -8,6 +8,13 @@ use Illuminate\Http\Request;
 
 class SettingController extends Controller
 {
+
+    function __construct()
+    {
+      
+        $this->middleware('permission:settings-edit', ['only' => ['edit', 'update']]);
+        
+    }
     /**
      * Display a listing of the resource.
      */

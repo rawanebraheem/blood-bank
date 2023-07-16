@@ -3,9 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Article;
-use App\Models\ArticleClient;
 use App\Models\BloodType;
-use App\Models\BloodTypeClient;
 use App\Models\Category;
 use App\Models\City;
 use App\Models\Client;

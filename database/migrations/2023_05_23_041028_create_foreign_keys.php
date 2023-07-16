@@ -10,7 +10,7 @@ class CreateForeignKeys extends Migration {
 	{
 		Schema::table('contacts', function(Blueprint $table) {
 			
-			$table->foreignId('client_id')->constrained();
+			$table->foreignId('client_id')->nullable()->constrained();
 
 		});
 		Schema::table('cities', function(Blueprint $table) {

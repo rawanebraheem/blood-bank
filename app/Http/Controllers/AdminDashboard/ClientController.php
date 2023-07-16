@@ -19,6 +19,14 @@ use Illuminate\Http\Request;
 
 class ClientController extends Controller
 {
+
+    function __construct()
+    {
+        $this->middleware('permission:client-list', ['only' => ['index']]);
+        $this->middleware('permission:client-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:client-edit', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:client-delete', ['only' => ['destroy']]);
+    }
     /**
      * Display a listing of the resource.
      */
@@ -96,10 +104,10 @@ class ClientController extends Controller
      */
     public function update(Request $request, string $id)
     {
+       
         $request->validate([
             'name' => ['required', 'string', 'max:70'],
             'email' => ['required', 'string', 'email', 'max:60',  'unique:clients,email,' . $id],
-            //'password' => ['nullable', Rules\Password::defaults()], //,'confirmed'
             'phone' => ['required', 'unique:clients,phone,' . $id],
             'blood_type_id' => ['required', 'numeric'],
             'last_donation_date' => ['required'],
@@ -109,7 +117,8 @@ class ClientController extends Controller
 
         ]);
 
-        $request->merge(['password' => bcrypt($request->password)]);
+      
+      
         $client = Client::findorfail($id);
 
         $client->update($request->all());
@@ -118,7 +127,7 @@ class ClientController extends Controller
             //how can i call the logout method from the other class
             //how can i knew if the user in the app or in the web
             //how can i handle the web and flash session
-            $logout=(new AuthController)->logout($client); 
+            $logout=(new AuthController)->logout($client);
 
             //this for web client
             //$client->logout();

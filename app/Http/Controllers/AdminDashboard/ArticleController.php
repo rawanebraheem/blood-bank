@@ -10,9 +10,18 @@ use App\Models\Article;
 
 class ArticleController extends Controller
 {
+
+    function __construct()
+    {
+        $this->middleware('permission:article-list', ['only' => ['index']]);
+        $this->middleware('permission:article-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:article-edit', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:article-show', ['only' => ['show']]);
+        $this->middleware('permission:article-delete', ['only' => ['destroy']]);
+    }
     /**
      * Display a listing of the resource.
-     */
+     */ 
     public function index(Request $request)
     {
         $categories=Category::all();

@@ -16,7 +16,7 @@
             @endforeach
         </select>
         <input
-        style="background-color: #060607; 
+            style="background-color: #060607; 
         border: none;
         color: white;
         padding: 15px 32px;
@@ -24,7 +24,7 @@
         text-decoration: none;
         display: inline-block;
         font-size: 16px;"
-        type="submit">
+            type="submit">
 
     </form>
     <br>
@@ -42,23 +42,32 @@
             </thead>
 
             <tbody>
+
                 @foreach ($articles as $article)
                     <tr>
                         <td>{{ $article->id }}</td>
                         <td>{{ $article->title }} </td>
                         <td>{{ $article->content }} </td>
                         <td>{{ $article->category->name }}</td>
-                        <td><a href="{{ url(route('articles.edit', $article->id)) }}">Edit article</a></td>
+                        @can('article-edit')
+                            <td><a href="{{ url(route('articles.edit', $article->id)) }}">Edit article</a></td>
+                        @endcan
 
-                        <td>
-                            <form action="{{ url(route('articles.destroy', $article->id)) }}" method="POST">
-                                @csrf
-                                @method('delete')
-                                <button type="submit">Delete article</button>
-                            </form>
-                        </td>
-                        <td> <a href="{{ url(route('articles.show', $article->id)) }}">View article</a>
-                        </td>
+                        @can('article-delete')
+                            <td>
+                                <form action="{{ url(route('articles.destroy', $article->id)) }}" method="POST">
+                                    @csrf
+                                    @method('delete')
+                                    <button type="submit">Delete article</button>
+                                </form>
+                            </td>
+                        @endcan
+
+                        @can('article-show')
+                            <td> <a href="{{ url(route('articles.show', $article->id)) }}">View article</a>
+                            </td>
+                        @endcan
+
 
 
                     </tr>

@@ -41,7 +41,12 @@
                     <td>{{ $city->id }}</td>
                     <td>{{ $city->name }}</td>
                     <td>{{ $city->governorate->name }}</td>
+                    @can('city-edit')
+
                     <td><a href="{{ url(route('cities.edit', $city->id)) }}">Edit city</a></td>
+                    @endcan
+
+                    @can('city-delete')
                     <td>
                         <form action="{{ url(route('cities.destroy', $city->id)) }}" method="POST">
                             @csrf
@@ -49,6 +54,7 @@
                             <button type="submit">Delete city</button>
                         </form>
                     </td>
+                    @endcan
 
 
 

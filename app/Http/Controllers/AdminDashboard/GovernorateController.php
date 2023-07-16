@@ -11,6 +11,14 @@ use App\Http\Controllers\Controller;
 
 class GovernorateController extends Controller
 {
+
+    function __construct()
+    {
+        $this->middleware('permission:governorate-list', ['only' => ['index']]);
+        $this->middleware('permission:governorate-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:governorate-edit', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:governorate-delete', ['only' => ['destroy']]);
+    }
     /**
      * Display a listing of the resource.
      */

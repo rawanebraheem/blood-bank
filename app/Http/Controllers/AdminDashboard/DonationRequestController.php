@@ -10,6 +10,13 @@ use Illuminate\Http\Request;
 
 class DonationRequestController extends Controller
 {
+
+    function __construct()
+    {
+        $this->middleware('permission:donation-request-list', ['only' => ['index']]);
+        $this->middleware('permission:donation-request-show', ['only' => ['show']]);
+        $this->middleware('permission:donation-request-delete', ['only' => ['destroy']]);
+    }
     /**
      * Display a listing of the resource.
      */

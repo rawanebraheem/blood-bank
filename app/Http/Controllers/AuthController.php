@@ -52,6 +52,7 @@ class AuthController extends Controller
         ]);
 
         $credentials = $request->only('phone', 'password')+['is_active'=> 1];
+    //dd($credentials);
 
         if (auth('api-web')->validate($credentials)) {
 
@@ -79,7 +80,8 @@ class AuthController extends Controller
          //$client->currentAccessToken()->delete();
 
         }else{
-          auth('sanctum')->user()->currentAccessToken()->delete();
+            auth('sanctum')->user()->tokens()->delete();
+        // auth('sanctum')->user()->currentAccessToken()->delete();
         }
 
         return self::response(1, 'success');

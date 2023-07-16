@@ -65,8 +65,10 @@
             </div>
             <div class="form-group">
                 <label for="is_active">Is active</label>
-                <input class="form-control"type="number" name="is_active" id="is_active" value="{{ $client->is_active }}" max="1"
-                min="0">
+                <select name="is_active" id="">
+                    <option value="0" @if(!$client->is_active) selected @endif>In Active</option>
+                    <option value="1"  @if($client->is_active) selected @endif>Active</option>
+                </select>
             </div>
 
         </div>
