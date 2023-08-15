@@ -1,24 +1,5 @@
 <x-master>
-    <x-slot name="navbar">
-        <ul class="navbar-nav">
-            <li class="nav-item active ">
-                <a class="nav-link" href="{{ url('web/home') }}">الرئيسية <span class="sr-only">(current)</span></a>
-            </li>
-
-            <li class="nav-item ">
-                <a class="nav-link" href="{{ url('web/articles') }}">المقالات</a>
-            </li>
-            <li class="nav-item ">
-                <a class="nav-link" href="{{ url('web/donation-requests') }}">طلبات التبرع</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{{ url('web/about-us') }}">من نحن</a>
-            </li>
-            <li class="nav-item ">
-                <a class="nav-link" href="{{ url('web/contact-us') }}">اتصل بنا</a>
-            </li>
-        </ul>
-    </x-slot>
+  
 
     <!--intro-->
     <div class="intro">
@@ -32,7 +13,7 @@
                 <div class="carousel-item carousel-1 active">
                     <div class="container info">
                         <div class="col-lg-5">
-                            <h3>بنك الدم نمضى قدما لصحة أفضل</h3>
+                            <h3>{{ __('index.h3_intro')}}</h3>
                             <p>
                                 هناك حقيقة مثبتة منذ زمن طويل وهي أن المحتوى المقروء لصفحة ما سيلهي القارئ عن التركيز
                                 على الشكل الخارجي للنص.
@@ -91,10 +72,32 @@
         </div>
 
 
-        <livewire:favtoggleindex />
+
+        <div class="view">
+            <div class="container">
+
+                <div class="row">
+
+
+                    <div class="articles-carousel owl-carousel">
+
+
+                        @foreach ($articles as $articl)
+                            {{-- <livewire:favtoggleindex /> --}}
+                           
+                            @livewire('favtoggleindex', [$articl])
+                        @endforeach
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
 
     </div>
-
     <!--requests-->
     <div class="requests">
         <div class="container">
@@ -109,12 +112,12 @@
                     @foreach ($don_requests as $don_request)
                         <div class="details">
                             <div class="blood-type">
-                                <h2 dir="ltr">{{$don_request->bloodType->name}}</h2>
+                                <h2 dir="ltr">{{ $don_request->bloodType->name }}</h2>
                             </div>
                             <ul>
-                                <li><span>اسم الحالة:</span> {{$don_request->patient_name}}</li>
-                                <li><span>مستشفى:</span>{{$don_request->hospital_name}} </li>
-                                <li><span>المدينة:</span>{{$don_request->city->name}}</li>
+                                <li><span>اسم الحالة:</span> {{ $don_request->patient_name }}</li>
+                                <li><span>مستشفى:</span>{{ $don_request->hospital_name }} </li>
+                                <li><span>المدينة:</span>{{ $don_request->city->name }}</li>
                             </ul>
                             <a href="{{ url('web/donation-request', $don_request->id) }}">التفاصيل</a>
                         </div>
@@ -153,7 +156,8 @@
                 <div class="info col-md-6">
                     <h3>تطبيق بنك الدم</h3>
                     <p>
-                        هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة، لقد تم توليد هذا النص من مولد النص العربى،
+                        هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة، لقد تم توليد هذا النص من مولد النص
+                        العربى،
                     </p>
                     <div class="download">
                         <h4>متوفر على</h4>

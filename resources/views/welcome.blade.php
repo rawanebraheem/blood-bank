@@ -13,7 +13,7 @@
 <body class="hold-transition login-page">
 <div class="login-box">
   
-  
+
   <div class="card">
     <div class="card-body login-card-body">
       
@@ -27,9 +27,9 @@
          <a href="{{ route('login') }}" class="btn btn-block btn-primary">
           <i >log in</i> 
         </a>
-        <a href="{{ route('login') }}" class="btn btn-block btn-primary">
+        {{-- <a href="{{ route('login') }}" class="btn btn-block btn-primary">
           <i >register</i> 
-        </a>
+        </a> --}}
         @endauth
        
       </div>

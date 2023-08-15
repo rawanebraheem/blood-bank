@@ -1,34 +1,13 @@
 <x-master>
-    <x-slot name="navbar">
-        <ul class="navbar-nav">
-            <li class="nav-item ">
-                <a class="nav-link" href="{{ url('web/home') }}">الرئيسية <span
-                        class="sr-only">(current)</span></a>
-            </li>
-           
-            <li class="nav-item ">
-                <a class="nav-link"  href="{{ url('web/articles') }}">المقالات</a>
-            </li>
-            <li class="nav-item active ">
-                <a class="nav-link" href="{{ url('web/donation-requests') }}">طلبات التبرع</a>
-            </li>
-            <li class="nav-item ">
-                <a class="nav-link" href="{{ url('web/about-us') }}">من نحن</a>
-            </li>
-            <li class="nav-item ">
-                <a class="nav-link" href="{{ url('web/contact-us') }}">اتصل بنا</a>
-            </li>
-        </ul>
-    </x-slot>
+
 
 
     <body class="donation-requests">
-        <!--upper-bar-->
 
 
 
 
-        <!--inside-article-->
+
         <div class="all-requests">
             <div class="container">
                 <div class="path">
@@ -39,6 +18,8 @@
                         </ol>
                     </nav>
                 </div>
+
+                <div> <br><a href="{{url('web/create-donation-request')}}"><button  class="btn btn-danger" style="font-size: 25px ; padding: 20px 70px;" > انشاء طلب تبرع</button></a></div>
 
                 <!--requests-->
                 <div class="requests">
@@ -89,26 +70,25 @@
                             </div>
                         </form>
                         <div class="patients">
-                            @foreach($donation_requests as $donation_request)
-                            <div class="details">
-                                <div class="blood-type">
-                                    <h2 dir="ltr">{{$donation_request->bloodType->name}}</h2>
+                            @foreach ($donation_requests as $donation_request)
+                                <div class="details">
+                                    <div class="blood-type">
+                                        <h2 dir="ltr">{{ $donation_request->bloodType->name }}</h2>
+                                    </div>
+                                    <ul>
+                                        <li><span>{{ $donation_request->patient_name }}</span> </li>
+                                        <li><span>مستشفى:</span> {{ $donation_request->hospital_name }}</li>
+                                        <li><span>المدينة:</span> {{ $donation_request->city->name }}</li>
+                                    </ul>
+                                    <a href="{{ url('web\donation-request', $donation_request->id) }}">التفاصيل</a>
+
                                 </div>
-                                <ul>
-                                    <li><span>{{$donation_request->patient_name}}</span>  </li>
-                                    <li><span>مستشفى:</span> {{$donation_request->hospital_name}}</li>
-                                    <li><span>المدينة:</span> {{$donation_request->city->name}}</li>
-                                </ul>
-                                <a href="{{url('web\donation-request',$donation_request->id)}}">التفاصيل</a>
-                               
-                            </div>
-                            
                             @endforeach
-                                
-                               
+
+
                         </div>
                         {!! $donation_requests->links() !!}
-                       
+
                     </div>
                 </div>
             </div>
@@ -119,4 +99,3 @@
 
     </body>
 </x-master>
-

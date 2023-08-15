@@ -23,6 +23,9 @@ $(document).ready(function() {
     })
 });
 
+
+
+
 $("#governorates").change(function() {
     var governorateId = $("#governorates").val();
     console.log("selected gov:" + governorateId);

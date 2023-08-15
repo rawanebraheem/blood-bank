@@ -3,7 +3,6 @@
 namespace App\Http\Livewire;
 
 use Livewire\Component;
-use App\Models\Article;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -11,12 +10,13 @@ use Illuminate\Support\Facades\Auth;
 class Favtoggleindex extends Component
 {
 
-    public $articles;
+    public $article;
 
-    public function mount()
+    public function mount($articl)
+
     {
 
-        $this->articles = Article::latest()->take(4)->get();
+        $this->article = $articl;
     }
     public function render()
     {
@@ -25,10 +25,13 @@ class Favtoggleindex extends Component
     public function articleToggleFav(string $id)
     {
         if (Auth::guard('api-web')->check()) {
-            return  Auth::guard('api-web')->user()->articles()->toggle($id);
-        }
 
-        session()->flash('error', 'you shoud login first So that you can favour articles');
-        return redirect()->to('web/home');
+            Auth::guard('api-web')->user()->articles()->toggle($id);
+        } else {
+            session()->flash('error', 'you shoud login first So that you can favour articles');
+          
+
+            return redirect()->to('/web/home');
+        }
     }
 }

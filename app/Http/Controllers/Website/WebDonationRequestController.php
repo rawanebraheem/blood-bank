@@ -3,9 +3,13 @@
 namespace App\Http\Controllers\Website;
 
 use App\Models\Request as DonationRequest;
+use Illuminate\Support\Facades\Auth;
 use App\Models\BloodType;
 use App\Models\Governorate;
 use App\Models\City;
+use App\Models\Client;
+use App\Models\Notification;
+
 
 
 
@@ -19,16 +23,14 @@ class WebDonationRequestController extends Controller
         $cities = City::all();
         $governorates = Governorate::all();
         $blood_types = BloodType::all();
-       
+
         $donation_requests = DonationRequest::where(function ($query) use ($request) {
-            if ($request->blood_type ||$request->city) {
-                $query->where('blood_type_id',  $request->blood_type )
-                    ->orWhere ('city_id',  $request->city );
-                        
-                  
+            if ($request->blood_type || $request->city) {
+                $query->where('blood_type_id',  $request->blood_type)
+                    ->orWhere('city_id',  $request->city);
             }
         })->paginate();
-        return view('website.donation-requests', compact('donation_requests','blood_types', 'governorates', 'cities'));
+        return view('website.donation-requests', compact('donation_requests', 'blood_types', 'governorates', 'cities'));
     }
 
 
@@ -46,7 +48,7 @@ class WebDonationRequestController extends Controller
         $blood_types = BloodType::all();
         $governorates = Governorate::all();
         $cities = City::all();
-        return view('website.donation_request_create', compact('blood_types', 'governorates', 'cities'));
+        return view('website.create_donation_request', compact('blood_types', 'governorates', 'cities'));
     }
 
 
@@ -57,7 +59,7 @@ class WebDonationRequestController extends Controller
 
 
 
-    public function createRequest(request $request)
+    public function store(request $request)
     {
 
         $request->validate([
@@ -76,11 +78,14 @@ class WebDonationRequestController extends Controller
         ]);
 
         //$don_request = Auth::user()->requests()->create($request->all());
-        $don_request = new DonationRequest($request->toArray());
-        $don_request->client_id = Auth::user()->id;
+        $don_request = DonationRequest::create($request->toArray());
+        if (Auth::guard('api-web')->check()) {
+            $don_request->client_id  = Auth::guard('api-web')->user()->id;
+            $don_request->save();
+        }
+    
 
-        $don_request->save();
-
+        
         //creating notification for the request
         $governorate = Governorate::where('id', $don_request->city->governorate_id)->first();
 
@@ -91,40 +96,22 @@ class WebDonationRequestController extends Controller
         $notification = Notification::create([
             'title' => 'There is a new donation request',
             'content' => $content,
-            'request_id' => $request->request_id,
+            'request_id' => $don_request->id,
 
         ]);
 
 
 
-        $clients = Client::whereHas('governorates', function ($query)  use ($donation) {
-            $query->where('governorate_id', $donation->city->governorate_id);
-        })->whereHas('bloodTypes', function ($query) use ($donation) {
-            $query->where('blood_type_id', $donation->blood_type_id);
+        $clients = Client::whereHas('governorates', function ($query)  use ($don_request) {
+            $query->where('governorate_id', $don_request->city->governorate_id);
+        })->whereHas('bloodTypes', function ($query) use ($don_request) {
+            $query->where('blood_type_id', $don_request->blood_type_id);
         })->pluck('id')->toArray();
 
-        //Another solution
-
-        // $governorate_clients = $governorate->clients()->get();
-        // $bloodtype_clients =$don_request->bloodType->setting_clients()->get();
-
-        // $i = 0;
-        // foreach ($governorate_clients as $governorate_client) {
-        //    $governorate_clients_array[$i] = $governorate_client->id;
-        //     $i++;
-        // }
-        // $i = 0;
-        // foreach ($bloodtype_clients as $bloodtype_client) {
-
-        //     if (in_array($bloodtype_client->id, $governorate_clients_array)) {
-        //         $clients[$i] = $bloodtype_client->id;
-        //         $i++;
-        //     }
-        // }
-
+       
 
         $notification->clients()->attach($clients, ['is_read' => FALSE]);
 
-        return self::response(1, "success", ['clients' => $clients, 'don_request' => $don_request]);
+        return back()->with('success','donation request has been added successfly');
     }
 }

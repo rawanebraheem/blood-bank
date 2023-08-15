@@ -23,7 +23,16 @@
     <link rel="stylesheet" href="{{ asset('assets/css/owl.theme.default.min.css') }}">
 
     <!--style css-->
+    {{-- @if(Lang::locale()=='ar')
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
+    @else
+    <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/style-ltr.css') }}">
+
+    @endif --}}
+    <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
+
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"
         integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -41,10 +50,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-4 col-md-6">
-                    <div class="language">
-                        <a href="index.html" class="ar active">عربى</a>
-                        <a href="index-ltr.html" class="en inactive">EN</a>
-                    </div>
+                  
                 </div>
                 <div class="col-lg-4 col-md-6">
                     <div class="social">
@@ -135,7 +141,31 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
-                    {{ $navbar }}
+
+
+                  
+                        <ul class="navbar-nav">
+                            <li class="nav-item @if(request()->is('web/home')) active @endif">
+                                <a class="nav-link" href="{{ url('web/home') }}">الرئيسية <span
+                                        class="sr-only">(current)</span></a>
+                            </li>
+                           
+                            <li class="nav-item  @if(request()->is('web/articles')) active @endif">
+                                <a class="nav-link"  href="{{ url('web/articles') }}">المقالات</a>
+                            </li>
+                            <li class="nav-item @if(request()->is('web/donation-requests')) active @endif">
+                                <a class="nav-link" href="{{ url('web/donation-requests') }}">طلبات التبرع</a>
+                            </li>
+                            <li class="nav-item @if(request()->is('web/about-us')) active @endif">
+                                <a class="nav-link" href="{{ url('web/about-us') }}">من نحن</a>
+                            </li>
+                            <li class="nav-item @if(request()->is('web/contact-us')) active @endif">
+                                <a class="nav-link" href="{{ url('web/contact-us') }}">اتصل بنا</a>
+                            </li>
+                        </ul>
+                    
+
+
 
                     <!--not a member-->
                     <div class="accounts">
@@ -256,11 +286,14 @@
     <script src="https://cdn.rtlcss.com/bootstrap/v4.2.1/js/bootstrap.min.js"
         integrity="sha384-a9xOd0rz8w0J8zqj1qJic7GPFfyMfoiuDjC9rqXlVOcGO/dmRqzMn34gZYDTel8k" crossorigin="anonymous">
     </script>
+    <script src="{{ asset('assets/js/main.js') }}"></script>
 
     <script src="{{ asset('assets/js/owl.carousel.min.js') }}"></script>
 
-    <script src="{{ asset('assets/js/main.js') }}"></script>
+
+
     @livewireScripts
+
 
 </body>
 

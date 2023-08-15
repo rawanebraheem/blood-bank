@@ -21,8 +21,8 @@ class WebMainController extends Controller
     {
         $settings = Setting::first();
         $don_requests = DonationRequest::with('client', 'city.governorate', 'bloodType')->latest()->take(4)->get();
-
-        return view('website.index', compact("settings", "don_requests"));
+        $articles = Article::paginate();
+        return view('website.index', compact("settings", "don_requests","articles"));
     }
     public function createContact(Request $request)
     {

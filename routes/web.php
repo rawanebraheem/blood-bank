@@ -41,18 +41,11 @@ use App\Http\Controllers\Website\WebLoginController;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-Route::get('test', function () {
-   
-    return view('test');
-});
 
 
-Route::get('/', function () {
-    return view('welcome');
-});
-Route::get('/en', function () {
-    return view('website_en/index-ltr');
-});
+
+
+//web routes
 
 
 Route::prefix('web')->group(function () {
@@ -64,6 +57,9 @@ Route::prefix('web')->group(function () {
 
     Route::get('donation-requests', [WebDonationRequestController::class, 'index']);
     Route::get('donation-request/{id}', [WebDonationRequestController::class, 'show']);
+    Route::get('create-donation-request', [WebDonationRequestController::class, 'create']);
+    Route::post('store-donation-request', [WebDonationRequestController::class, 'store']);
+
     Route::get('about-us', function () {
         return view('website.who-are-us');
     });
@@ -80,17 +76,16 @@ Route::prefix('web')->group(function () {
 
 
 
-
-    
-
-
-
-
-
 });
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
+
+//admin routes
+
+Route::get('/', function () {
+    return view('welcome');
+});
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
