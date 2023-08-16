@@ -379,9 +379,7 @@ class MainController extends Controller
 
         ]);
 
-        //$contact->client_id = 5/*Auth::user()->id*/;
-        //$contact->save();
-        //if u run this code make the client_id gaurded
+        
 
         return self::response(1, "success", $contact);
     }

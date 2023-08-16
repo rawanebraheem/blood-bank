@@ -54,9 +54,7 @@ class DonationRequestController extends Controller
      */
     public function show(string $id)
     {
-        // n + 1
-        // $request->client->name
-        // eager loading
+       
         $donation_request = DonationRequest::with('client','city.governorate','bloodType')
         ->findorfail($id);
         return view('donation_requests.view_donation_request', compact('donation_request'));

@@ -124,15 +124,10 @@ class ClientController extends Controller
         $client->update($request->all());
 
         if ($client->is_active == 0) {
-            //how can i call the logout method from the other class
-            //how can i knew if the user in the app or in the web
-            //how can i handle the web and flash session
+            
             $logout=(new AuthController)->logout($client);
 
-            //this for web client
-            //$client->logout();
-            // redirect to where
-            //return redirect('login');
+            
         }
         
 

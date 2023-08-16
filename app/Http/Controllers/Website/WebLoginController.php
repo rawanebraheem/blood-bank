@@ -36,11 +36,11 @@ class WebLoginController extends Controller
 
 
     public function logout(Request $request)
-    { //بنحدد الجارد ولا لا؟؟
+    { 
         Auth::guard('api-web')->logout();
 
         $request->session()->invalidate();
-        //اى التوكن دا زززدا غير بتاع ال ا بى اى؟؟
+        
         $request->session()->regenerateToken();
 
         return redirect('web/home');

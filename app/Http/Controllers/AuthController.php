@@ -67,14 +67,13 @@ class AuthController extends Controller
 
             return self::response(0, "failed");
         }
-        //look when i use the get() instead of first it doesnot work
-        //  return ....... what shoud i return here;
+      
 
     }
 
     public function logout($client=null)
     {
-        //how it can knows if the logout success to return 1 or not
+     
         if($client){
         $client->tokens()->delete();
          //$client->currentAccessToken()->delete();

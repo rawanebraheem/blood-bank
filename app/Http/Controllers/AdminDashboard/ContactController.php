@@ -81,4 +81,3 @@ class ContactController extends Controller
         return back()->with('success', 'successfly deleted');
     }
 }
-//?id=1

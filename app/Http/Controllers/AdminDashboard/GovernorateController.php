@@ -51,7 +51,7 @@ class GovernorateController extends Controller
 
         ]);
 
-        //flash()->success("successfly added"); //laracasts/flash
+        //flash()->success("successfly added");
         return back()->with('success', 'successfly added');
     }
 
